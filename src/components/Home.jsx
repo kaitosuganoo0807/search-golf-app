@@ -22,25 +22,30 @@ class Home extends React.Component {
     budget: '12000',
     departure: '1',
     duration: '90',
-    plans: [],
-    planCount: 0
+    plans: null,
+    planCount: 0,
+    error: null
   };
 
-  onFormSubmit = async event => {  // async awaitという記述は、非同期通信と呼ばれるもの。JSの処理が終わっていなくても次のコードを実行してしまうという特徴があるため、ゴルフ場の取得の処理が終わるまではthis.setState...の処理はしないでねという意味
-    event.preventDefault(); // デフォルトのsubmit処理ではなく独自のsubmit処理がしたいため、こちらの記述でデフォルトの処理をキャンセルしている
+  onFormSubmit = async (event) => {  // async awaitという記述は、非同期通信と呼ばれるもの。JSの処理が終わっていなくても次のコードを実行してしまうという特徴があるため、ゴルフ場の取得の処理が終わるまではthis.setState...の処理はしないでねという意味
+    try {
+      event.preventDefault(); // デフォルトのsubmit処理ではなく独自のsubmit処理がしたいため、こちらの記述でデフォルトの処理をキャンセルしている
 
-    const response = await axios.get('https://api.myjson.com/bins/p2tnu', { // 作成したAPIを貼り付ける。axiosを使って、getのHTTP通信を行う。同時に先ほど設定したstateをパラメーターとして送信している。
-      params: {
-        date: format(this.state.date, 'yyyyMMdd'),
-        budget: this.state.budget,
-        departure: this.state.departure,
-        duration: this.state.duration
-      }
-    });
-    this.setState({
-      planCount: response.data.count,
-      plans: response.data.plans
-    });
+      const response = await axios.get('https://api.myjson.com/bins/p2tnu', { // 作成したAPIを貼り付ける。axiosを使って、getのHTTP通信を行う。同時に先ほど設定したstateをパラメーターとして送信している。
+        params: {
+          date: format(this.state.date, 'yyyyMMdd'),
+          budget: this.state.budget,
+          departure: this.state.departure,
+          duration: this.state.duration
+        }
+      });
+      this.setState({
+        planCount: response.data.count,
+        plans: response.data.plans
+      })
+    } catch (e) {
+      this.setState({ error: e})
+    }
   }
 
   render() {
@@ -104,6 +109,7 @@ class Home extends React.Component {
           <Result
             plans={this.state.plans}
             planCount={this.state.planCount}
+            error={this.state.error}
           />
         </div>
       </div>

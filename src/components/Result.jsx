@@ -2,7 +2,19 @@ import React from "react";
 import "./Common.css";
 
 // こちらで、Home.jsxから渡されたコンポーネントを受け取ります。
-const Result = ({ plans, planCount }) => {
+const Result = ({ plans, planCount, error }) => {
+
+  if (error) {
+    return (
+      <div className="ui negative message">
+        <i className="close icon"></i>
+        <div className="header">
+          エラーが発生しました。
+        </div>
+        検索条件を見直すか、管理者にお問い合わせください。
+      </div>
+    );
+  }
 
   if (!plans) {
     return <div></div>
