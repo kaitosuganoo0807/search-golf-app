@@ -13,6 +13,8 @@ import format from 'date-fns/format';
 
 import Result from './Result';
 
+import Loading from './Loading';
+
 const Today = new Date();
 registerLocale('ja', ja);
 
@@ -24,12 +26,14 @@ class Home extends React.Component {
     duration: '90',
     plans: null,
     planCount: 0,
-    error: null
+    error: null,
+    loading: false
   };
 
   onFormSubmit = async (event) => {  // async awaitという記述は、非同期通信と呼ばれるもの。JSの処理が終わっていなくても次のコードを実行してしまうという特徴があるため、ゴルフ場の取得の処理が終わるまではthis.setState...の処理はしないでねという意味
     try {
       event.preventDefault(); // デフォルトのsubmit処理ではなく独自のsubmit処理がしたいため、こちらの記述でデフォルトの処理をキャンセルしている
+      this.setState({ loading: true });
 
       const response = await axios.get('https://api.myjson.com/bins/p2tnu', { // 作成したAPIを貼り付ける。axiosを使って、getのHTTP通信を行う。同時に先ほど設定したstateをパラメーターとして送信している。
         params: {
@@ -43,6 +47,7 @@ class Home extends React.Component {
         planCount: response.data.count,
         plans: response.data.plans
       })
+      this.setState({ loading: false });
     } catch (e) {
       this.setState({ error: e})
     }
@@ -106,6 +111,9 @@ class Home extends React.Component {
               </button>
             </div>
           </form>
+
+          <Loading loading={this.state.loading}/>
+
           <Result
             plans={this.state.plans}
             planCount={this.state.planCount}
