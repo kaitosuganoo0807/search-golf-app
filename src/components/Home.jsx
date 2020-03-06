@@ -11,17 +11,22 @@ import addDays from 'date-fns/addDays'; //date-fnsからaddDaysという関数�
 import axios from 'axios'; //axiosをimport
 import format from 'date-fns/format';
 
+import Result from './Result';
+
 const Today = new Date();
 registerLocale('ja', ja);
 
 class Home extends React.Component {
   state = {
     date: addDays(new Date(), 14),
-    budget: '12000', departure: '1',
-    duration: '90'
-  }
+    budget: '12000',
+    departure: '1',
+    duration: '90',
+    plans: [],
+    planCount: 0
+  };
 
-  onFormSubmit = async (event) => {  // async awaitという記述は、非同期通信と呼ばれるもの。JSの処理が終わっていなくても次のコードを実行してしまうという特徴があるため、ゴルフ場の取得の処理が終わるまではthis.setState...の処理はしないでねという意味
+  onFormSubmit = async event => {  // async awaitという記述は、非同期通信と呼ばれるもの。JSの処理が終わっていなくても次のコードを実行してしまうという特徴があるため、ゴルフ場の取得の処理が終わるまではthis.setState...の処理はしないでねという意味
     event.preventDefault(); // デフォルトのsubmit処理ではなく独自のsubmit処理がしたいため、こちらの記述でデフォルトの処理をキャンセルしている
 
     const response = await axios.get('https://api.myjson.com/bins/p2tnu', { // 作成したAPIを貼り付ける。axiosを使って、getのHTTP通信を行う。同時に先ほど設定したstateをパラメーターとして送信している。
@@ -96,6 +101,10 @@ class Home extends React.Component {
               </button>
             </div>
           </form>
+          <Result
+            plans={this.state.plans}
+            planCount={this.state.planCount}
+          />
         </div>
       </div>
     );
