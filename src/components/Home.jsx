@@ -90,10 +90,6 @@ class Home extends React.Component {
               >
                 <option value="1">東京駅</option>
                 <option value="2">横浜駅</option>
-                <option value="3">仙台駅</option>
-                <option value="4">札幌駅</option>
-                <option value="5">大阪駅</option>
-                <option value="6">福岡駅</option>
               </select>
             </div>
             <div className="field">
